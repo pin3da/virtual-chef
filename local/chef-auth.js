@@ -10,7 +10,7 @@ var data = {
 }
 
 var getCode = function (req, res, next) {
-  var state = Math.random().toString(36).substring(7)
+  var state = 'xyz'
   var loginURL = `${data.authorizationURL}?response_type=code&client_id=${data.clientID}&state=${state}&redirect_uri=${data.callbackURL}`
   res.redirect(loginURL)
 }
