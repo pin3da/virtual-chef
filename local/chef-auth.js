@@ -3,8 +3,8 @@ var request = require('request')
 var data = {
   authorizationURL: 'https://api.codechef.com/oauth/authorize',
   tokenURL: 'https://api.codechef.com/oauth/token',
-  clientID: '8b8cd8105e734839b607c9d175c8777a',
-  clientSecret: '6c04bc60828a23f2da7b5e6e909f05eb',
+  clientID: '76ffa84f57f0276abcbc5d8ecc246691',
+  clientSecret: 'ed3f09a2110901436e901b998494341f',
   callbackURL: 'http://localhost:3000/auth/codechef/callback',
   userProfileURL: 'https://api.codechef.com/users/me'
 }
@@ -35,7 +35,8 @@ var getToken = function (req, res, next) {
 }
 
 function findChefUser (token, next) {
-  request.get(data.userProfileURL,
+  request.get(
+    data.userProfileURL,
     {
       headers: {
         Authorization: `Bearer ${token}`
@@ -48,7 +49,7 @@ function findChefUser (token, next) {
     })
 }
 
-function sessionHandler () {
+function sessionHandler (findUser) {
   return function (req, res, next) {
     if (!req.session.oauth || !req.session.oauth.access_token) {
       return next()
@@ -56,8 +57,11 @@ function sessionHandler () {
     var token = req.session.oauth.access_token
     findChefUser(token, function (err, data) {
       if (err || data.status !== 'OK') res.status(500).send('can get info about user')
-      req.user = data.result.data.content
-      next()
+      findUser(data.result.data.content.username, function (err, user) {
+        if (err) return res.status('500').send(err)
+        req.user = user
+        next()
+      })
     })
   }
 }
