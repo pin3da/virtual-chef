@@ -92,6 +92,8 @@ function refreshToken (req, next) {
   }
 }
 
+/** next: function (err, body) */
+
 function get (url, req, next) {
   refreshToken(req, function (err) {
     if (err) return next(err)

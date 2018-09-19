@@ -1,11 +1,18 @@
 <%- include('../header'); -%>
 
+
 <main>
-    <ul>
-    <% for (i in activeContests) { %>
-        <li><%= activeContests[i].name %></li>
-    <% } %>
-    </ul>
+    <form action="/contest/" method="POST">
+        <input type="number" name="minutesToStart" min="0" value="5"/> <span>Minutes before start the virtual contest</span>
+        </br>
+        <select name="contestCode">
+            <% for (i in activeContests) { %>
+                <option value="<%= activeContests[i].code %>"> <%= activeContests[i].name %> </option>
+            <% } %>
+        </select>
+        </br></br>
+        <input class="codechef-btn" type="submit" value="Create Virtual Contest!">
+    </form>
 </main>
 
 <%- include('../footer'); -%>

@@ -55,3 +55,8 @@ main, header{
   font-size: 18px;
   text-align: center;
 }
+
+input[type=number] {
+  padding: 10px;
+  margin: 5px 0px;
+}

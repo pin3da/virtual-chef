@@ -18,10 +18,6 @@ var ContestScheme = new Scheme(
     duration: {
       type: Number,
       required: true
-    },
-    user: {
-      type: String,
-      required: true
     }
   },
   {
