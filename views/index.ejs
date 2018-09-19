@@ -22,8 +22,11 @@
   <main>
     <% if (user) { %>
       <p>Hello <%= user.username %> </p>
+      <a class='codechef-btn' href='/contest/create'>Create new virtual contest </a>
+      <p>Here the list of contest you have created:</p>
+      <p><%= user.contests %></p>
     <% } else { %>
-        <p>No hay nadie aqui</p>
+        <p>Please log in (: </p>
     <% } %>
 
   </main>
