@@ -6,10 +6,6 @@ var cookieSession = require('cookie-session')
 var logger = require('morgan')
 var mongoose = require('mongoose')
 
-var indexRouter = require('./routes/index')
-var usersRouter = require('./routes/users')
-var authRouter = require('./routes/auth')
-
 var chefAuth = require('./local/chef-auth')
 var User = require('./models/users')
 
@@ -35,9 +31,10 @@ app.use(chefAuth.sessionHandler(User.findOrCreate))
 // Mongodb
 mongoose.connect('mongodb://chef123:chef123@ds259912.mlab.com:59912/chef', { useNewUrlParser: true })
 
-app.use('/', indexRouter)
-app.use('/users', usersRouter)
-app.use('/auth', authRouter)
+app.use('/', require('./routes/index'))
+app.use('/users', require('./routes/users'))
+app.use('/auth', require('./routes/auth'))
+app.use('/contest', require('./routes/contests'))
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
