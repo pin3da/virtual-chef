@@ -1,35 +1,15 @@
-<!DOCTYPE html>
-<html>
+<%- include('header'); -%>
 
-<head>
-  <title>
-    Virtual Contest Creator
-  </title>
-  <link rel='stylesheet' href='/stylesheets/style.css' />
-</head>
+<main>
+  <% if (user) { %>
+    <p>Hello <%= user.username %> </p>
+    <a class='codechef-btn' href='/contest/create'>Create new virtual contest </a>
+    <p>Here the list of contest you have created:</p>
+    <p><%= user.contests %></p>
+  <% } else { %>
+      <p>Please log in (: </p>
+  <% } %>
 
-<body>
-  <nav>
-    <ul>
-      <li><a href="/">Homepage</a></li>
-      <li><a href="/auth/codechef">Login</a></li>
-      <li><a href="/auth/logout">Logout</a></li>
-    </ul>
-  </nav>
-  <header>
-    <h1>Virtual contest creator</h1>
-  </header>
-  <main>
-    <% if (user) { %>
-      <p>Hello <%= user.username %> </p>
-      <a class='codechef-btn' href='/contest/create'>Create new virtual contest </a>
-      <p>Here the list of contest you have created:</p>
-      <p><%= user.contests %></p>
-    <% } else { %>
-        <p>Please log in (: </p>
-    <% } %>
+</main>
 
-  </main>
-</body>
-
-</html>
+<%- include('footer'); -%>

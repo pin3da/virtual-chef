@@ -1,6 +1,11 @@
+<%- include('../header'); -%>
 
-<ul>
-<% for (i in activeContests) { %>
-    <li><%= activeContests[i].name %></li>
-<% } %>
-</ul>
+<main>
+    <ul>
+    <% for (i in activeContests) { %>
+        <li><%= activeContests[i].name %></li>
+    <% } %>
+    </ul>
+</main>
+
+<%- include('../footer'); -%>
