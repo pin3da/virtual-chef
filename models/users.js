@@ -1,8 +1,9 @@
 const mongoose = require('mongoose')
+const ContestSchema = require('./contest').schema
 
 const User = mongoose.model('User', {
-  username: String,
-  contests: [String]
+  username: { type: String, index: true },
+  contests: [ContestSchema]
 })
 
 function findOrCreate (username, next) {
@@ -19,6 +20,11 @@ function findOrCreate (username, next) {
   })
 }
 
+function addContest (username, contestID, next) {
+  next(null)
+}
+
 module.exports = {
-  findOrCreate: findOrCreate
+  findOrCreate: findOrCreate,
+  addContest: addContest
 }
