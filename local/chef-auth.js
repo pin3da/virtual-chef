@@ -30,23 +30,23 @@ var getToken = function (req, res, next) {
     function (err, d, body) {
       if (err) return res.status(500).send('cant get token ):')
       req.session.oauth = body.result.data
+      // compute the expire time in milliseconds from the param "expires in" of codechef
+      req.session.oauth.expire_time = Date.now() + req.session.oauth.expires_in * 1000
       res.redirect('/')
     })
 }
 
 function findChefUser (token, next) {
-  request.get(
-    data.userProfileURL,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-      json: true
+  request.get(data.userProfileURL, {
+    headers: {
+      Authorization: `Bearer ${token}`
     },
-    function (err, d, body) {
-      if (err) return next(err, null)
-      next(null, body)
-    })
+    json: true
+  },
+  function (err, d, body) {
+    if (err) return next(err, null)
+    next(null, body)
+  })
 }
 
 function sessionHandler (findUser) {
@@ -56,7 +56,8 @@ function sessionHandler (findUser) {
     }
     var token = req.session.oauth.access_token
     findChefUser(token, function (err, data) {
-      if (err || data.status !== 'OK') res.status(500).send('can get info about user')
+      if (err || data.status !== 'OK') return res.status(500).send(data)
+      if (data.errors) return res.status(500).send(data.errors)
       findUser(data.result.data.content.username, function (err, user) {
         if (err) return res.status('500').send(err)
         req.user = user
@@ -66,8 +67,58 @@ function sessionHandler (findUser) {
   }
 }
 
+function refreshToken (req, next) {
+  if (req.session.oauth.expire_time <= Date.now()) {
+    request.post(
+      data.tokenURL,
+      {
+        json: {
+          grant_type: 'refresh_token',
+          refresh_token: req.session.oauth.refresh_token,
+          client_id: data.clientID,
+          client_secret: data.clientSecret
+        }
+      },
+      function (err, d, body) {
+        if (err) return next(err)
+        req.session.oauth = body.result.data
+        // compute the expire time in milliseconds from the param "expires in" of codechef
+        req.session.oauth.expire_time = Date.now() + req.session.oauth.expires_in * 1000
+        next()
+      }
+    )
+  } else {
+    next()
+  }
+}
+
+function get (url, req, next) {
+  refreshToken(req, function (err) {
+    if (err) return next(err)
+    request.get(url, {
+      headers: {
+        Authorization: `Bearer ${req.session.oauth.access_token}`
+      },
+      json: true
+    },
+    function (err, d, body) {
+      if (err) return next(err)
+      return next(null, body)
+    })
+  })
+}
+
+function assertLoggedIn (req, res, next) {
+  if (!req.session || !req.session.oauth) {
+    return res.redirect('/')
+  }
+  next()
+}
+
 module.exports = {
+  assertLoggedIn: assertLoggedIn,
   getCode: getCode,
   getToken: getToken,
-  sessionHandler: sessionHandler
+  sessionHandler: sessionHandler,
+  get: get
 }
