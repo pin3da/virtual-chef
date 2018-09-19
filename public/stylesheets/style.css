@@ -36,9 +36,10 @@ main, header{
 }
 
 .codechef-btn{
+  border: none;
   color: #fff;
   text-decoration: none;
   font-size: 18px;
   padding: 10px;
-  background: #11aaFF;
+  background: #00aaaa;
 }
