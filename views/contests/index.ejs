@@ -1,0 +1,28 @@
+<%- include('../header'); -%>
+
+<% if (contest.timeToEnd < 0) { %>
+    <header>
+        <h1> The contest has ended </h1>
+    </header>
+<% } else { %>
+    <header>
+        <h1> Now runing: <%= contest.name %> </h1>
+        <span> time to finish: <%= contest.timeToEnd / 1000 %> seconds </span>
+    </header>
+
+    <main>
+        <table class='table'>
+            <tr>
+                <% for (i = 0; i < contest.problemsList.length; i++) { %>
+                    <th>
+                        <a href='https://www.codechef.com/<%= contest.code %>/problems/<%= contest.problemsList[i].problemCode %>'>
+                            <%= contest.problemsList[i].problemCode %>
+                        </a>
+                    </th>
+                <% } %>
+            </tr>
+        </table>
+    </main>
+<% } %>
+
+<%- include('../footer'); -%>

@@ -60,3 +60,38 @@ input[type=number] {
   padding: 10px;
   margin: 5px 0px;
 }
+
+
+/* reset */
+table, caption, tbody, tfoot, thead, tr, th, td {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  transition: all 250ms ease;
+  width: 100%;
+}
+
+.table {
+  border-collapse: separate;
+  border-bottom: 2px solid #11aaaa;
+  border-spacing: 0;
+  border-top: 0;
+  table-layout: fixed;
+}
+
+.table a {
+  color: #FFF;
+}
+
+.table th {
+  color: white;
+  background-color: #11aaaa;
+}
+
+.table th, .table td {
+  padding: 15px;
+  border-top: 1px solid #11aaaa;
+}

@@ -21,11 +21,15 @@ function findOrCreate (username, next) {
   })
 }
 
-function addContest (userID, contest, next) {
+function addContest (userID, contestData, next) {
   User.findById(userID, function (err, user) {
     if (err) return next(err)
-    user.contests.push(contest)
-    user.save(next)
+    let contest = new Contest(contestData)
+    contest.save(function (err) {
+      if (err) return next(err)
+      user.contests.push(contest)
+      user.save(next)
+    })
   })
 }
 

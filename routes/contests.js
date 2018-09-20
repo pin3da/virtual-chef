@@ -1,6 +1,7 @@
 const express = require('express')
 const chefAuth = require('../local/chef-auth')
 const User = require('../models/users')
+const Contest = require('../models/contest')
 
 const router = express.Router()
 
@@ -8,15 +9,24 @@ const codechefEndpoint = 'https://api.codechef.com'
 
 router.use(chefAuth.assertLoggedIn)
 
-router.get('/', function (req, res, next) {
-  res.send('Coming soon: all your contests here')
-})
-
 router.get('/create', function (req, res, next) {
   chefAuth.get(codechefEndpoint + '/contests?status=past&limit=10', req, function (err, data) {
     if (err || data.status !== 'OK') return res.status(500).send(err)
     let activeContests = data.result.data.content.contestList
     res.render('contests/create', { activeContests: activeContests })
+  })
+})
+
+router.get('/:cid', function (req, res, next) {
+  Contest.findById(req.params['cid'], function (err, contest) {
+    if (err) return res.status(500).send(`Can not get this contest from the db: ${err}`)
+    chefAuth.get(`${codechefEndpoint}/contests/${contest.code}`, req, function (err, body) {
+      if (err) return res.status(500).send(`failed to retrieve info about contest: ${err}`)
+      let contestInfo = body.result.data.content
+      contest.timeToEnd = contest.startTime.getTime() + contest.duration - Date.now()
+      contest.problemsList = contestInfo.problemsList
+      res.render('contests/index', { contest: contest })
+    })
   })
 })
 
