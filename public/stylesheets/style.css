@@ -11,7 +11,7 @@ nav{
   padding: 20px 10px;
 }
 nav ul{
-  max-width: 960px;
+  max-width: 1500px;
   margin: 0 auto;
   padding: 0;
 }
@@ -29,7 +29,7 @@ nav a{
   display: block;
 }
 main, header{
-  max-width: 960px;
+  max-width: 1500px;
   margin: 30px auto;
   padding: 0 10px;
   color: #333;
@@ -76,9 +76,8 @@ table, caption, tbody, tfoot, thead, tr, th, td {
 
 .table {
   border-collapse: separate;
-  border-bottom: 2px solid #11aaaa;
+  border: 2px solid #117777;
   border-spacing: 0;
-  border-top: 0;
   table-layout: fixed;
 }
 
@@ -93,5 +92,4 @@ table, caption, tbody, tfoot, thead, tr, th, td {
 
 .table th, .table td {
   padding: 15px;
-  border-top: 1px solid #11aaaa;
 }

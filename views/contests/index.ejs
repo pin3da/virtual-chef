@@ -13,14 +13,31 @@
     <main>
         <table class='table'>
             <tr>
-                <% for (i = 0; i < contest.problemsList.length; i++) { %>
+                <th>User</th>
+                <% for (let i = 0; i < contest.problemsList.length; i++) { %>
                     <th>
-                        <a href='https://www.codechef.com/<%= contest.code %>/problems/<%= contest.problemsList[i].problemCode %>'>
+                        <a href='https://www.codechef.com/problems/<%= contest.problemsList[i].problemCode %>' target='_blank'>
                             <%= contest.problemsList[i].problemCode %>
                         </a>
                     </th>
                 <% } %>
+                <th style="background-color: #117777;">TOTAL</th>
             </tr>
+            <% for (let i = 0; i < standings.length; i++) { %>
+                <tr>
+                    <td> <%= standings[i][0] %> </td>
+                    <% for (let j = 1; j < standings[i].length - 1; j++) { %>
+                    <td>
+                        <% if (standings[i][j].solved) { %>
+                            +<%= standings[i][j].submissions %> / <%= standings[i][j].time %>
+                        <% } %>
+                    </td>
+                    <% } %>
+                    <td>
+                        <%= standings[i][standings[i].length - 1] %>
+                    </td>
+                </tr>
+            <% } %>
         </table>
     </main>
 <% } %>
