@@ -9,31 +9,10 @@ const data = {
   userProfileURL: 'https://api.codechef.com/users/me'
 }
 
-function getCode (req, res, next) {
-  const state = 'xyz'
-  const loginURL = `${data.authorizationURL}?response_type=code&client_id=${data.clientID}&state=${state}&redirect_uri=${data.callbackURL}`
-  res.redirect(loginURL)
-}
-
-function getToken (req, res, next) {
-  request.post(
-    data.tokenURL,
-    {
-      json: {
-        grant_type: 'authorization_code',
-        code: req.query.code,
-        client_id: data.clientID,
-        client_secret: data.clientSecret,
-        redirect_uri: data.callbackURL
-      }
-    },
-    function (err, d, body) {
-      if (err) return res.status(500).send('cant get token ):')
-      req.session.oauth = body.result.data
-      // compute the expire time in milliseconds from the param "expires in" of codechef
-      req.session.oauth.expire_time = Date.now() + req.session.oauth.expires_in * 1000
-      res.redirect('/')
-    })
+function setTokens (req, res, next) {
+  req.session.oauth = req.body
+  req.session.oauth.expire_time = Date.now() + req.session.oauth.expires_in * 1000
+  res.json(req.body)
 }
 
 function findChefUser (token, next) {
@@ -119,8 +98,7 @@ function assertLoggedIn (req, res, next) {
 
 module.exports = {
   assertLoggedIn: assertLoggedIn,
-  getCode: getCode,
-  getToken: getToken,
+  setTokens: setTokens,
   sessionHandler: sessionHandler,
   get: get
 }

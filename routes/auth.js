@@ -8,9 +8,6 @@ router.get('/logout', (req, res) => {
   res.redirect('/')
 })
 
-// auth login with codechef
-router.get('/codechef', chefAuth.getCode)
-
-router.get('/codechef/callback', chefAuth.getToken)
+router.post('/login', chefAuth.setTokens)
 
 module.exports = router
