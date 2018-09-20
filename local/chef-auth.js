@@ -1,6 +1,6 @@
-var request = require('request')
+const request = require('request')
 
-var data = {
+const data = {
   authorizationURL: 'https://api.codechef.com/oauth/authorize',
   tokenURL: 'https://api.codechef.com/oauth/token',
   clientID: '76ffa84f57f0276abcbc5d8ecc246691',
@@ -9,13 +9,13 @@ var data = {
   userProfileURL: 'https://api.codechef.com/users/me'
 }
 
-var getCode = function (req, res, next) {
-  var state = 'xyz'
-  var loginURL = `${data.authorizationURL}?response_type=code&client_id=${data.clientID}&state=${state}&redirect_uri=${data.callbackURL}`
+function getCode (req, res, next) {
+  const state = 'xyz'
+  const loginURL = `${data.authorizationURL}?response_type=code&client_id=${data.clientID}&state=${state}&redirect_uri=${data.callbackURL}`
   res.redirect(loginURL)
 }
 
-var getToken = function (req, res, next) {
+function getToken (req, res, next) {
   request.post(
     data.tokenURL,
     {
@@ -54,7 +54,7 @@ function sessionHandler (findUser) {
     if (!req.session.oauth || !req.session.oauth.access_token) {
       return next()
     }
-    var token = req.session.oauth.access_token
+    const token = req.session.oauth.access_token
     findChefUser(token, function (err, data) {
       if (err || data.status !== 'OK') return res.status(500).send(data)
       if (data.errors) return res.status(500).send(data.errors)
