@@ -10,4 +10,7 @@ router.get('/logout', (req, res) => {
 
 router.post('/login', chefAuth.setTokens)
 
+router.get('/codechef', chefAuth.getCode)
+router.get('/codechef/callback', chefAuth.getToken)
+
 module.exports = router
