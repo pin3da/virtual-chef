@@ -17,13 +17,6 @@ router.get('/create', function (req, res, next) {
   })
 })
 
-function getStandings (contestCode, req, next) {
-  chefAuth.get(`${codechefEndpoint}/rankings/${contestCode}?limit=10&sortBy=rank&sortOrder=asc`, req, function (err, body) {
-    if (err || body.status !== 'OK') return next(err)
-    next(null, body.result.data.content)
-  })
-}
-
 function getContestInfo (contest, req, next) {
   chefAuth.get(`${codechefEndpoint}/contests/${contest.code}`, req, function (err, body) {
     if (err || body.status !== 'OK') return next(err)
