@@ -13,7 +13,7 @@ router.get('/create', function (req, res, next) {
   chefAuth.get(codechefEndpoint + '/contests?status=past&limit=10', req, function (err, data) {
     if (err || data.status !== 'OK') return res.status(500).send(err)
     let activeContests = data.result.data.content.contestList
-    res.render('contests/create', { activeContests: activeContests })
+    res.json({ activeContests: activeContests })
   })
 })
 
@@ -80,7 +80,7 @@ router.get('/:cid', function (req, res, next) {
       getVirtualSubmissions(contest, req, function (err, submissions) {
         if (err) return res.status(500).send(`Can not get user submissions from codechef ${err}`)
         let finalStandings = mergeStandings(contest, submissions, req.user.username)
-        res.render('contests/index', {
+        res.json({
           contest: contestData,
           standings: finalStandings
         })
