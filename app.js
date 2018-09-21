@@ -26,7 +26,6 @@ app.use(cookieSession({
   maxAge: 60 * 60 * 1000,
   keys: ['asdkjhfasdlfkjhasdlkjfh314rfasdc324fascasdqdc']
 }))
-app.use(express.static(path.join(__dirname, 'public')))
 
 // Keeps relation between cookies and oauth users
 app.use(chefAuth.sessionHandler(User.findOrCreate))
