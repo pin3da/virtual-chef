@@ -1,0 +1,31 @@
+---
+- hosts: all
+  become: no
+
+  environment:
+    NODE_ENV: prod
+    PORT: 3333
+
+  tasks:
+    - name: Install pm2
+      npm:
+        name: pm2
+        global: yes
+
+    - name: Clone the repository
+      git:
+        repo: git@github.com:pin3da/virtual-chef.git
+        dest: /root/backend
+        accept_hostkey: yes
+        force: yes
+
+    - name: Install project dependencies
+      npm:
+        path: /root/backend
+
+    - name: Delete old pm2 process
+      command: pm2 delete backend
+      ignore_errors: yes
+
+    - name: Start backend using pm2
+      command: pm2 start /root/backend/bin/www --name backend
