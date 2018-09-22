@@ -5,7 +5,7 @@ const chefAuth = require('../local/chef-auth')
 // auth logout
 router.get('/logout', (req, res) => {
   req.session = null
-  res.sendStatus(200)
+  res.json({ status: 'OK' })
 })
 
 router.post('/login', chefAuth.setTokens)

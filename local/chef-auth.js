@@ -3,8 +3,8 @@ const request = require('request')
 const data = {
   authorizationURL: 'https://api.codechef.com/oauth/authorize',
   tokenURL: 'https://api.codechef.com/oauth/token',
-  clientID: '76ffa84f57f0276abcbc5d8ecc246691',
-  clientSecret: 'ed3f09a2110901436e901b998494341f',
+  clientID: '1e0d3b472d830433964cf30e033bc46d',
+  clientSecret: 'f7f700a2f031d4eb4b33ceecf3e5f31c',
   callbackURL: 'http://localhost:3000/auth/codechef/callback',
   userProfileURL: 'https://api.codechef.com/users/me'
 }
@@ -98,7 +98,20 @@ function refreshToken (req, next) {
   }
 }
 
-/** next: function (err, body) */
+/**
+ * Callback for authorized get
+ *
+ * @callback getCallback
+ * @param {Error} err - error if query does not succeed
+ * @param {Object} body - response of query
+ */
+
+/**
+ * Performs a get requiest with proper authorization
+ * @param {String} url - URL to request from
+ * @param {Object} req - request object from the original petition
+ * @param {getCallback} next - callback
+ */
 
 function get (url, req, next) {
   refreshToken(req, function (err) {
@@ -118,7 +131,7 @@ function get (url, req, next) {
 
 function assertLoggedIn (req, res, next) {
   if (!req.session || !req.session.oauth) {
-    return res.redirect('/')
+    return res.status(401).json({ error: 'plase log in' })
   }
   next()
 }
