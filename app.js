@@ -1,24 +1,23 @@
-var createError = require('http-errors')
-var express = require('express')
-var path = require('path')
-var cookieParser = require('cookie-parser')
-var cookieSession = require('cookie-session')
-var logger = require('morgan')
-var mongoose = require('mongoose')
+const createError = require('http-errors')
+const express = require('express')
+const cookieParser = require('cookie-parser')
+const cookieSession = require('cookie-session')
+const logger = require('morgan')
+const mongoose = require('mongoose')
 
-var chefAuth = require('./local/chef-auth')
-var User = require('./models/users')
+const chefAuth = require('./local/chef-auth')
+const User = require('./models/users')
 
-var app = express()
+const app = express()
 
 // enable cors
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   // TODO: fix cors in production
-  res.header('Access-Control-Allow-Credentials', true);
-  res.header('Access-Control-Allow-Origin', req.headers.origin);
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,UPDATE,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
-  next();
+  res.header('Access-Control-Allow-Credentials', true)
+  res.header('Access-Control-Allow-Origin', req.headers.origin)
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,UPDATE,OPTIONS')
+  res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept')
+  next()
 })
 
 app.use(logger('dev'))
