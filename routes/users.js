@@ -10,7 +10,10 @@ router.get('/', function (req, res, next) {
 })
 
 router.get('/contests', function (req, res, next) {
-  res.json({ contests: req.user.contests })
+  User.getContests(req.user._id, function (err, data) {
+    if (err) return res.status(500).json(err)
+    res.json({ contests: data })
+  })
 })
 
 module.exports = router

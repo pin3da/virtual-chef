@@ -98,12 +98,11 @@ router.post('/', function (req, res, next) {
     let contest = {
       name: contestInfo.name,
       code: contestInfo.code,
-      duration: end - start,
-      startTime: req.body.minutesToStart * 60 * 1000 + Date.now()
+      duration: end - start
     }
     User.addContest(req.user._id, contest, function (err) {
       if (err) return res.status(500).send(`failed to add the contest to your user: ${err}`)
-      res.redirect('/')
+      res.json({ status: 'OK' })
     })
   })
 })

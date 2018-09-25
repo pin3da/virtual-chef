@@ -1,24 +1,13 @@
-var mongoose = require('mongoose')
-var Scheme = mongoose.Schema
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
-var ContestScheme = new Scheme(
+var ContestScheme = new Schema(
   {
-    name: {
-      type: String,
-      required: true
-    },
-    code: {
-      type: String,
-      required: true
-    },
-    startTime: {
-      type: Date,
-      required: true
-    },
-    duration: {
-      type: Number,
-      required: true
-    }
+    name: { type: String, required: true },
+    code: { type: String, required: true },
+    duration: { type: Number, required: true },
+    author: { type: Schema.Types.ObjectId, ref: 'User' },
+    registrants: [ { type: Schema.Types.ObjectId, ref: 'User' } ]
   },
   {
     timestamps: {

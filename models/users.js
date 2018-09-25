@@ -1,10 +1,10 @@
 const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 const Contest = require('./contest')
-const ContestSchema = Contest.schema
 
 const User = mongoose.model('User', {
   username: { type: String, index: true },
-  contests: [ContestSchema]
+  contests: [ { type: Schema.Types.ObjectId, ref: 'Contest' } ]
 })
 
 function findOrCreate (username, next) {
@@ -24,6 +24,7 @@ function findOrCreate (username, next) {
 function addContest (userID, contestData, next) {
   User.findById(userID, function (err, user) {
     if (err) return next(err)
+    contestData.author = userID
     let contest = new Contest(contestData)
     contest.save(function (err) {
       if (err) return next(err)
@@ -33,7 +34,15 @@ function addContest (userID, contestData, next) {
   })
 }
 
+function getContests (userID, next) {
+  User.findOne({ _id: userID }).populate('contests').exec(function (err, data) {
+    if (err) return next(err)
+    next(null, data.contests)
+  })
+}
+
 module.exports = {
   findOrCreate: findOrCreate,
-  addContest: addContest
+  addContest: addContest,
+  getContests: getContests
 }

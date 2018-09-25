@@ -11,6 +11,15 @@ const User = require('./models/users')
 const app = express()
 
 // enable cors
+app.options('/*', function (req, res) {
+  // TODO: fix cors in production
+  res.header('Access-Control-Allow-Credentials', true)
+  res.header('Access-Control-Allow-Origin', req.headers.origin)
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,UPDATE,OPTIONS')
+  res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept')
+  res.sendStatus(200)
+})
+
 app.use(function (req, res, next) {
   // TODO: fix cors in production
   res.header('Access-Control-Allow-Credentials', true)
@@ -38,7 +47,7 @@ mongoose.connect('mongodb://chef123:chef123@ds259912.mlab.com:59912/chef', { use
 app.use('/', require('./routes/index'))
 app.use('/users', require('./routes/users'))
 app.use('/auth', require('./routes/auth'))
-app.use('/contest', require('./routes/contests'))
+app.use('/contests', require('./routes/contests'))
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
