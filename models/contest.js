@@ -23,7 +23,10 @@ function getAll (options, next) {
   options.sort = { created_at: -1 }
   Contest.find({}, null, options).populate('author', 'username').exec(function (err, contests) {
     if (err) return next(err)
-    next(null, contests)
+    Contest.estimatedDocumentCount().exec(function (err, numContests) {
+      if (err) return next(err)
+      next(null, { contests: contests, numContests: numContests })
+    })
   })
 }
 

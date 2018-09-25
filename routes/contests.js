@@ -11,20 +11,20 @@ router.use(chefAuth.assertLoggedIn)
 
 router.get('/', function (req, res) {
   options = {
-    offset: 0,
+    skip: 0,
     limit: 10
   }
-  if (req.query.offset) options.offset = parseInt(req.query.offset, 10)
+  if (req.query.offset) options.skip = parseInt(req.query.offset, 10)
   if (req.query.limit) options.limit = parseInt(req.query.limit, 10)
-  Contest.getAll(options, function (err, contests) {
+  Contest.getAll(options, function (err, data) {
     if (err) return res.status(500).json({ error: `${err}` })
-    res.json({ contests: contests })
+    res.json(data)
   })
 })
 
 router.post('/', function (req, res, next) {
   chefAuth.get(`${codechefEndpoint}/contests/${req.body.contestCode}`, req, function (err, body) {
-    if (err) return res.status(500).send(`failed to retrieve info about contest: ${err}`)
+    if (err) return res.status(500).send(`failed to retrieve info about contest`)
     let contestInfo = body.result.data.content
     let start = new Date(contestInfo.startDate).getTime()
     let end = new Date(contestInfo.endDate).getTime()
