@@ -10,7 +10,13 @@ const codechefEndpoint = 'https://api.codechef.com'
 router.use(chefAuth.assertLoggedIn)
 
 router.get('/', function (req, res) {
-  Contest.getAll(function (err, contests) {
+  options = {
+    offset: 0,
+    limit: 10
+  }
+  if (req.query.offset) options.offset = parseInt(req.query.offset, 10)
+  if (req.query.limit) options.limit = parseInt(req.query.limit, 10)
+  Contest.getAll(options, function (err, contests) {
     if (err) return res.status(500).json({ error: `${err}` })
     res.json({ contests: contests })
   })

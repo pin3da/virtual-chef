@@ -19,8 +19,9 @@ const ContestScheme = new Schema(
 
 const Contest = mongoose.model('Contest', ContestScheme)
 
-function getAll (next) {
-  Contest.find({}).populate('author', 'username').exec(function (err, contests) {
+function getAll (options, next) {
+  options.sort = { created_at: -1 }
+  Contest.find({}, null, options).populate('author', 'username').exec(function (err, contests) {
     if (err) return next(err)
     next(null, contests)
   })
