@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-var ContestScheme = new Schema(
+const ContestScheme = new Schema(
   {
     name: { type: String, required: true },
     code: { type: String, required: true },
@@ -17,4 +17,16 @@ var ContestScheme = new Schema(
   }
 )
 
-module.exports = mongoose.model('Contest', ContestScheme)
+const Contest = mongoose.model('Contest', ContestScheme)
+
+function getAll (next) {
+  Contest.find({}).populate('author', 'username').exec(function (err, contests) {
+    if (err) return next(err)
+    next(null, contests)
+  })
+}
+
+module.exports = {
+  Contest: Contest,
+  getAll: getAll,
+}

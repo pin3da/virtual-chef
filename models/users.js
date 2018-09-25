@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
-const Contest = require('./contest')
+const Contest = require('./contest').Contest
 
 const User = mongoose.model('User', {
   username: { type: String, index: true },
