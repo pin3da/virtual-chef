@@ -42,7 +42,12 @@ app.use(cookieSession({
 app.use(chefAuth.sessionHandler(User.findOrCreate))
 
 // Mongodb
-mongoose.connect('mongodb://chef123:chef123@ds259912.mlab.com:59912/chef', { useNewUrlParser: true })
+mongoose.connect('mongodb://chef123:chef123@ds113200.mlab.com:13200/chef',
+  {
+    useNewUrlParser: true,
+    useCreateIndex: true
+  }
+)
 
 app.use('/', require('./routes/index'))
 app.use('/users', require('./routes/users'))
