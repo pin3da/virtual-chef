@@ -1,5 +1,20 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
+const ObjectID = mongoose.Types.ObjectId
+
+const RegistrantSchema = new Schema(
+  {
+    contestID: { type: Schema.Types.ObjectId, ref: 'Contests', required: true },
+    userID: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    startDate: { type: Date, required: true }
+  }
+)
+
+RegistrantSchema.index({ contestID: 1, userID: 1 }, { unique: true })
+
+const Registrant = mongoose.model('Registrant', RegistrantSchema)
+
+Registrant.ensureIndexes()
 
 const ContestScheme = new Schema(
   {
@@ -7,7 +22,7 @@ const ContestScheme = new Schema(
     code: { type: String, required: true },
     duration: { type: Number, required: true },
     author: { type: Schema.Types.ObjectId, ref: 'User' },
-    registrants: [ { type: Schema.Types.ObjectId, ref: 'User' } ]
+    registrants: [ { type: Schema.Types.ObjectId, ref: 'Registrant' } ]
   },
   {
     timestamps: {
@@ -30,7 +45,31 @@ function getAll (options, next) {
   })
 }
 
+function addUser (contestID, userID, startDate, next) {
+  contestID = new ObjectID(contestID)
+  console.log('Called addUser with', contestID, userID, startDate)
+  Contest.findById(contestID, function (err, contest) {
+    if (err) return next(err)
+    const registrant = new Registrant({
+      userID: userID,
+      contestID: contestID,
+      startDate: startDate
+    })
+
+    registrant.save(function (err, regData) {
+      if (err) return next(err)
+      contest.registrants.push(regData)
+      contest.save(function (err, contData) {
+        if (err) return next(err)
+        next(null, contData)
+      })
+    })
+  })
+}
+
 module.exports = {
   Contest: Contest,
+  Registrant: Registrant,
   getAll: getAll,
+  addUser: addUser
 }
