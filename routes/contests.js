@@ -1,4 +1,6 @@
 const express = require('express')
+const async = require('async')
+
 const chefAuth = require('../local/chef-auth')
 const User = require('../models/users')
 const Contest = require('../models/contest')
@@ -20,6 +22,7 @@ router.get('/', function (req, res) {
   if (req.query.limit) options.limit = parseInt(req.query.limit, 10)
   Contest.getAll(options, function (err, data) {
     if (err) return res.status(500).json({ error: `failed to retrieve the contests: ${err}` })
+    data.registeredContests = req.user.registeredContests
     res.json(data)
   })
 })
@@ -31,12 +34,27 @@ router.post('/:cid/register', function (req, res) {
     const delayMilliseconds = req.body.minutesBeforeStart * 60 * 1000
     startDate = new Date(Date.now() + delayMilliseconds)
   }
-  Contest.addUser(contestID, req.user._id, startDate, function (err, data) {
-    if (err) {
-      if (err.code === DuplicatedKeyError) return res.status(500).json({ error: 'user is already registered on this contest' })
-      return res.status(500).json({ error: `${err}` })
+  async.parallel([
+    function (callback) {
+      Contest.registerUser(contestID, req.user._id, startDate, function (err, data) {
+        if (err) {
+          const msg = 'user is already registered on this contest'
+          if (err.code === DuplicatedKeyError) return callback(msg)
+          return callback(err)
+        }
+        callback(null, data)
+      })
+    },
+    function (callback) {
+      User.addRegisteredContest(req.user._id, contestID, function (err) {
+        if (err) return callback(err)
+        callback(null)
+      })
     }
-    res.json(data)
+  ],
+  function (err, results) {
+    if (err) return res.status(500).json({ error: err })
+    res.json(results[0])
   })
 })
 

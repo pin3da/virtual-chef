@@ -4,7 +4,8 @@ const Contest = require('./contest').Contest
 
 const User = mongoose.model('User', {
   username: { type: String, index: true },
-  contests: [ { type: Schema.Types.ObjectId, ref: 'Contest' } ]
+  contests: [ { type: Schema.Types.ObjectId, ref: 'Contest' } ],
+  registeredContests: [ { type: Schema.Types.ObjectId, ref: 'Contest' } ]
 })
 
 function findOrCreate (username, next) {
@@ -41,7 +42,19 @@ function getContests (userID, next) {
   })
 }
 
+function addRegisteredContest (userID, contestID, next) {
+  User.findById(userID, function (err, user) {
+    if (err) return next(err)
+    user.registeredContests.push(contestID)
+    user.save(function (err, data) {
+      if (err) return next(err)
+      return next(null, data)
+    })
+  })
+}
+
 module.exports = {
+  addRegisteredContest: addRegisteredContest,
   findOrCreate: findOrCreate,
   addContest: addContest,
   getContests: getContests

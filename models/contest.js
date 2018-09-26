@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const async = require('async')
 const Schema = mongoose.Schema
 const ObjectID = mongoose.Types.ObjectId
 
@@ -36,16 +37,27 @@ const Contest = mongoose.model('Contest', ContestScheme)
 
 function getAll (options, next) {
   options.sort = { created_at: -1 }
-  Contest.find({}, null, options).populate('author', 'username').exec(function (err, contests) {
+
+  async.parallel({
+    contests: function (callback) {
+      Contest.find({}, null, options).populate('author', 'username').exec(function (err, contests) {
+        if (err) return callback(err)
+        callback(null, contests)
+      })
+    },
+    numContests: function (callback) {
+      Contest.estimatedDocumentCount().exec(function (err, numContests) {
+        if (err) return callback(err)
+        callback(null, numContests)
+      })
+    }
+  }, function (err, results) {
     if (err) return next(err)
-    Contest.estimatedDocumentCount().exec(function (err, numContests) {
-      if (err) return next(err)
-      next(null, { contests: contests, numContests: numContests })
-    })
+    next(null, results)
   })
 }
 
-function addUser (contestID, userID, startDate, next) {
+function registerUser (contestID, userID, startDate, next) {
   contestID = new ObjectID(contestID)
   console.log('Called addUser with', contestID, userID, startDate)
   Contest.findById(contestID, function (err, contest) {
@@ -71,5 +83,5 @@ module.exports = {
   Contest: Contest,
   Registrant: Registrant,
   getAll: getAll,
-  addUser: addUser
+  registerUser: registerUser
 }
