@@ -75,7 +75,8 @@ router.post('/', function (req, res) {
     let contest = {
       name: contestInfo.name,
       code: contestInfo.code,
-      duration: end - start
+      duration: end - start,
+      problemsList: contestInfo.problemsList.map((p) => p.problemCode)
     }
     User.addContest(req.user._id, contest, function (err) {
       if (err) return res.status(500).send(`failed to add the contest to your user: ${err}`)

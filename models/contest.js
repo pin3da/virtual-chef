@@ -23,7 +23,8 @@ const ContestScheme = new Schema(
     code: { type: String, required: true },
     duration: { type: Number, required: true },
     author: { type: Schema.Types.ObjectId, ref: 'User' },
-    registrants: [ { type: Schema.Types.ObjectId, ref: 'Registrant' } ]
+    registrants: [ { type: Schema.Types.ObjectId, ref: 'Registrant' } ],
+    problemsList: [{ type: String }]
   },
   {
     timestamps: {
@@ -59,7 +60,6 @@ function getAll (options, next) {
 
 function registerUser (contestID, userID, startDate, next) {
   contestID = new ObjectID(contestID)
-  console.log('Called addUser with', contestID, userID, startDate)
   Contest.findById(contestID, function (err, contest) {
     if (err) return next(err)
     const registrant = new Registrant({
