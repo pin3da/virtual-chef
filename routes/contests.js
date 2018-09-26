@@ -13,6 +13,14 @@ const DuplicatedKeyError = 11000
 
 router.use(chefAuth.assertLoggedIn)
 
+router.get('/:cid', function (req, res) {
+  const contestID = req.params['cid']
+  Contest.get(contestID, function (err, contest) {
+    if (err) return res.status(500).json({ error: 'can not get this contest from the DB' })
+    res.json(contest)
+  })
+})
+
 router.get('/', function (req, res) {
   let options = {
     skip: 0,

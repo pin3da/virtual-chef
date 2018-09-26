@@ -79,9 +79,25 @@ function registerUser (contestID, userID, startDate, next) {
   })
 }
 
+function get (contestID, next) {
+  Contest
+    .findOne({ _id: contestID })
+    .populate({
+      path: 'registrants',
+      populate: {
+        path: 'userID'
+      }
+    })
+    .exec(function (err, contest) {
+      if (err) return next(err)
+      return next(null, contest)
+    })
+}
+
 module.exports = {
   Contest: Contest,
   Registrant: Registrant,
   getAll: getAll,
-  registerUser: registerUser
+  registerUser: registerUser,
+  get: get
 }
