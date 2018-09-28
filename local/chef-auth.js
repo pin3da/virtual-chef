@@ -131,7 +131,7 @@ function get (url, req, next) {
 
 function assertLoggedIn (req, res, next) {
   if (!req.session || !req.session.oauth) {
-    return res.status(401).json({ error: 'plase log in' })
+    return res.status(401).json({ error: 'please log in' })
   }
   next()
 }
