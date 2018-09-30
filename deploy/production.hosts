@@ -1,7 +1,6 @@
 [prod]
-149.129.136.228
+149.129.139.145
 
 [prod:vars]
 
 ansible_user=root
-ansible_ssh_pass=Uno234567$%#
