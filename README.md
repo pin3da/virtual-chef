@@ -8,6 +8,10 @@ You can see all the information in the [README](https://github.com/jhonber/codec
 
 This project uses NodeJS, MongoDB and the Codechef API.
 
+## Deploy instructions
+
+Deploy process is done using ansible, you can see the detailed instructions [here](./deploy)
+
 -----
 
 [Manuel Pineda](https://github.com/pin3da) & [Jhon Jimenez](https://github.com/jhonber/)
